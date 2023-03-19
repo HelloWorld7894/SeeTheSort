@@ -24,6 +24,20 @@ vector<int> InsertionSort(vector<int> input_vector)
             }
         }
 
+        if (i >= 1)
+        {
+            int i_backwards = 0;
+            while (input_vector[i - i_backwards] < input_vector[i - i_backwards - 1])
+            {
+                int elem1 = input_vector[i - i_backwards];
+                int elem2 = input_vector[i - i_backwards - 1];
+
+                input_vector[i - i_backwards] = elem2;
+                input_vector[i - i_backwards - 1] = elem1;
+                i_backwards += 1;
+            }
+        }
+
     }
 
     return input_vector;
