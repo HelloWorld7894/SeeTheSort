@@ -2,8 +2,10 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 int GetMaxElement(vector<int> input_vector)
 {
@@ -57,42 +59,45 @@ void PrintSortProcess(vector<int> input_vector, int iter)
 // SORTS
 //
 
-vector<int> InsertionSort(vector<int> input_vector)
-{   
-    //we are going to sort in ascending order
-    for (int i = 0; i < input_vector.size(); i++)
-    {
-        //PrintSortProcess(input_vector, i); //TODO: dodělat někdy!
-
-        if (i != input_vector.size() - 1){
-            int elem1 = input_vector[i];
-            int elem2 = input_vector[i + 1];
-
-            if (elem1 > elem2 )
-            {
-                input_vector[i] = elem2;
-                input_vector[i + 1] = elem1;
-            }
-        }
-
-        if (i >= 1)
+class InsertionSort {
+    public:
+        vector<int> insertion_main(vector<int> input_vector)
         {
-            int i_backwards = 0;
-            while (input_vector[i - i_backwards] < input_vector[i - i_backwards - 1])
+
+            //we are going to sort in ascending order
+            for (int i = 0; i < input_vector.size(); i++)
             {
-                int elem1 = input_vector[i - i_backwards];
-                int elem2 = input_vector[i - i_backwards - 1];
+                //PrintSortProcess(input_vector, i); //TODO: dodělat někdy!
 
-                input_vector[i - i_backwards] = elem2;
-                input_vector[i - i_backwards - 1] = elem1;
-                i_backwards += 1;
+                if (i != input_vector.size() - 1){
+                    int elem1 = input_vector[i];
+                    int elem2 = input_vector[i + 1];
+
+                    if (elem1 > elem2 )
+                    {
+                        input_vector[i] = elem2;
+                        input_vector[i + 1] = elem1;
+                    }
+                }
+
+                if (i >= 1)
+                {
+                    int i_backwards = 0;
+                    while (input_vector[i - i_backwards] < input_vector[i - i_backwards - 1])
+                    {
+                        int elem1 = input_vector[i - i_backwards];
+                        int elem2 = input_vector[i - i_backwards - 1];
+
+                        input_vector[i - i_backwards] = elem2;
+                        input_vector[i - i_backwards - 1] = elem1;
+                        i_backwards += 1;
+                    }
+                }
+
             }
+            return input_vector;
         }
-
-    }
-
-    return input_vector;
-}
+};
 
 class BogoSort {
     public:
@@ -136,7 +141,7 @@ int main()
     string input;
     vector<int> numbers;
 
-    cout << "Zadejte cisla ktere chcete seradit: (oddelujte mezerou)";
+    cout << "Zadejte cisla ktere chcete seradit (oddelujte mezerou): ";
     getline(cin, input);
     
     // input to vector
@@ -151,14 +156,19 @@ int main()
     // sort input?
     string sort_input;
     cout << "Jaky sort chcete pouzit?" << endl;
-    cout << "(insertion_sort, bogo_sort)";
+    cout << "(insertion_sort, bogo_sort): ";
     getline(cin, sort_input);
 
     // apply sort
     vector<int> numbers_sorted;
+
+    //timestamp checking
+    auto start = high_resolution_clock::now();
+
     if (sort_input == "insertion_sort")
     {
-        numbers_sorted = InsertionSort(numbers);
+        InsertionSort insertion_sort;
+        numbers_sorted = insertion_sort.insertion_main(numbers);
     }
     else if (sort_input == "bogo_sort")
     {
@@ -170,6 +180,9 @@ int main()
         return 0;
     }
 
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+
     //output the res array
     string out_string;
     for (int i = 0; i < input.length(); i++)
@@ -177,7 +190,9 @@ int main()
         out_string.insert(i, to_string(numbers_sorted[i]));
     }
     //get rid of extra characters
+    cout << "OUT: " << endl;
     cout << out_string.substr(0, numbers_sorted.size()) << endl;
+    cout << "Elapsed Time: " << duration.count() << " microseconds" << endl;
 
     return 0;
 }
