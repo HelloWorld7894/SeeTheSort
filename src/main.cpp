@@ -183,12 +183,47 @@ class SelectionSort
         }
 };
 
-class QuickSort
+class MergeSort
 {
     public:
-        vector<int> quicksort_main(vector<int> input_vector)
-        {
+        bool scan_done = false;
+        int depth = 0
 
+        tuple<int, int> scan_and_divide(vector<int> input_vector)
+        {
+            int batch1_size;
+            int batch2_size;
+
+            if (input_vector.size() % 2 == 1)
+            {
+                //odd
+                int div = input_vector.size() % 2;
+
+                batch1_size = div + (input_vector.size() - div) / 2;
+                batch2_size = (input_vector.size() - div) / 2;
+            }
+            else
+            {
+                //even
+                batch1_size = input_vector.size() / 2;
+                batch2_size = batch1_size;
+
+            }
+            return {batch1_size, batch2_size};
+        }
+
+        vector<int> mergesort_main(vector<int> input_vector)
+        {
+            depth = 0;
+            while(!scan_done)
+            {
+                int b1_size, b2_size;
+                tie(b1_size, b2_size) = scan_and_divide(input_vector);
+                depth += 1
+
+                if (b1_size )
+
+            }
         }
 };
 
@@ -235,6 +270,11 @@ int main()
     {
         SelectionSort selection_sort;
         numbers_sorted = selection_sort.selection_main(numbers);
+    }
+    else if (sort_input == "merge_sort")
+    {
+        MergeSort merge_sort;
+        numbers_sorted = merge_sort.mergesort_main(numbers);
     }
     else{
         cout << "Nechcete sortovat? ok" << endl;
