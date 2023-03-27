@@ -3,6 +3,7 @@
 #include <random>
 #include <algorithm>
 #include <chrono>
+#include <tuple>
 
 using namespace std;
 using namespace std::chrono;
@@ -136,6 +137,61 @@ class BogoSort {
         }
 };
 
+class SelectionSort
+{
+    public:
+        auto scan_array(vector<int> input_vector)
+        {
+            struct result 
+            {
+                int min_value;
+                int min_val_index;
+            };
+            result res;
+            
+            res.min_value = input_vector[0];
+            res.min_val_index = 0;
+            for(int i = 1; i < input_vector.size(); i++)
+            {
+                if (input_vector[i] < res.min_value)
+                {
+                    res.min_value = input_vector[i];
+                    res.min_val_index = i;
+                }
+            }
+    
+            return res;
+        }
+
+        vector<int> selection_main(vector<int> input_vector)
+        {
+
+            for (int i = 0; i < input_vector.size(); i++)
+            {  
+                int current_elem = input_vector[i];
+                auto result = scan_array(input_vector);
+                if (result.min_value < input_vector[i])
+                {
+                    //change indexes
+                    input_vector[result.min_val_index] = current_elem;
+                    current_elem = result.min_value;
+                }
+            }
+            
+
+            return input_vector;
+        }
+};
+
+class QuickSort
+{
+    public:
+        vector<int> quicksort_main(vector<int> input_vector)
+        {
+
+        }
+};
+
 int main()
 {
     string input;
@@ -156,7 +212,7 @@ int main()
     // sort input?
     string sort_input;
     cout << "Jaky sort chcete pouzit?" << endl;
-    cout << "(insertion_sort, bogo_sort): ";
+    cout << "(insertion_sort, bogo_sort, selection_sort): ";
     getline(cin, sort_input);
 
     // apply sort
@@ -174,6 +230,11 @@ int main()
     {
         BogoSort bogo_sort;
         numbers_sorted = bogo_sort.bogo_main(numbers);
+    }
+    else if (sort_input == "selection_sort")
+    {
+        SelectionSort selection_sort;
+        numbers_sorted = selection_sort.selection_main(numbers);
     }
     else{
         cout << "Nechcete sortovat? ok" << endl;
