@@ -186,45 +186,72 @@ class SelectionSort
 class MergeSort
 {
     public:
-        bool scan_done = false;
-        int depth = 0
+        // Merge two subarrays L and M into arr
+        vector<int> merge(vector<int> input_vector, int p, int q, int r) {
+        
+            // Create L ← A[p..q] and M ← A[q+1..r]
+            int n1 = q - p + 1;
+            int n2 = r - q;
 
-        tuple<int, int> scan_and_divide(vector<int> input_vector)
-        {
-            int batch1_size;
-            int batch2_size;
+            int L[n1], M[n2];
 
-            if (input_vector.size() % 2 == 1)
-            {
-                //odd
-                int div = input_vector.size() % 2;
+            for (int i = 0; i < n1; i++)
+                L[i] = input_vector[p + i];
+            for (int j = 0; j < n2; j++)
+                M[j] = input_vector[q + 1 + j];
 
-                batch1_size = div + (input_vector.size() - div) / 2;
-                batch2_size = (input_vector.size() - div) / 2;
+            // Maintain current index of sub-arrays and main array
+            int i, j, k;
+            i = 0;
+            j = 0;
+            k = p;
+
+            // Until we reach either end of either L or M, pick larger among
+            // elements L and M and place them in the correct position at A[p..r]
+            while (i < n1 && j < n2) {
+                if (L[i] <= M[j]) {
+                input_vector[k] = L[i];
+                i++;
+                } else {
+                input_vector[k] = M[j];
+                j++;
+                }
+                k++;
             }
-            else
-            {
-                //even
-                batch1_size = input_vector.size() / 2;
-                batch2_size = batch1_size;
 
+            // When we run out of elements in either L or M,
+            // pick up the remaining elements and put in A[p..r]
+            while (i < n1) {
+                input_vector[k] = L[i];
+                i++;
+                k++;
             }
-            return {batch1_size, batch2_size};
+
+            while (j < n2) {
+                input_vector[k] = M[j];
+                j++;
+                k++;
+            }
+            
+            return input_vector;
         }
 
-        vector<int> mergesort_main(vector<int> input_vector)
-        {
-            depth = 0;
-            while(!scan_done)
-            {
-                int b1_size, b2_size;
-                tie(b1_size, b2_size) = scan_and_divide(input_vector);
-                depth += 1
+        // Divide the array into two subarrays, sort them and merge them
+        vector<int> mergesort_main(vector<int> input_vector, int l, int r) {
+            if (l < r) {
+                // m is the point where the array is divided into two subarrays
+                int m = l + (r - l) / 2;
 
-                if (b1_size )
+                input_vector = mergesort_main(input_vector, l, m);
+                input_vector = mergesort_main(input_vector, m + 1, r);
 
+                // Merge the sorted subarrays
+                input_vector = merge(input_vector, l, m, r);
             }
+
+            return input_vector;
         }
+
 };
 
 int main()
@@ -274,7 +301,7 @@ int main()
     else if (sort_input == "merge_sort")
     {
         MergeSort merge_sort;
-        numbers_sorted = merge_sort.mergesort_main(numbers);
+        numbers_sorted = merge_sort.mergesort_main(numbers, 0, numbers.size());
     }
     else{
         cout << "Nechcete sortovat? ok" << endl;
