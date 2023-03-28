@@ -254,6 +254,43 @@ class MergeSort
 
 };
 
+class BubbleSort //basically just undeveloped Insertion sort
+{
+    public:
+        bool issorted(vector<int> input_vector)
+        {
+            for(int i = 0; i < input_vector.size(); i++)
+            {
+                if (input_vector[i] > input_vector[i + 1]){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        vector<int> bubblesort_main(vector<int> input_vector)
+        {
+            while(!issorted(input_vector))
+            {
+                for (int i = 0; i < input_vector.size(); i++)
+                {
+                    int elem1 = input_vector[i];
+                    int elem2 = input_vector[i + 1];
+
+                    if (elem1 > elem2)
+                    {
+                        //swap
+                        input_vector[i] = elem2;
+                        input_vector[i + 1] = elem1;
+                    }
+
+                }
+            }
+
+            return input_vector;
+        }
+};
+
 int main()
 {
     string input;
@@ -274,7 +311,7 @@ int main()
     // sort input?
     string sort_input;
     cout << "Jaky sort chcete pouzit?" << endl;
-    cout << "(insertion_sort, bogo_sort, selection_sort): ";
+    cout << "(insertion_sort, bogo_sort, selection_sort, merge_sort): ";
     getline(cin, sort_input);
 
     // apply sort
@@ -302,6 +339,11 @@ int main()
     {
         MergeSort merge_sort;
         numbers_sorted = merge_sort.mergesort_main(numbers, 0, numbers.size());
+    }
+    else if (sort_input == "bubble_sort")
+    {
+        BubbleSort bubble_sort;
+        numbers_sorted = bubble_sort.bubblesort_main(numbers);
     }
     else{
         cout << "Nechcete sortovat? ok" << endl;
